@@ -13,10 +13,11 @@ var folder = argv._[0].startsWith('/') ? argv._[0] : `${process.cwd()}/${argv._[
 
 var passed = 0
 var failed = 0
+var ignored = 0
 
 readdir(folder, (err, files) => {
     files.forEach(file => {
-        if (file.endsWith('.json')) {
+        if (file.toLowerCase().endsWith('.json')) {
             fs.readFile(file, 'utf8', (err, data) => {
                 if (err) throw err
                 try {
@@ -28,7 +29,7 @@ readdir(folder, (err, files) => {
                     failed++
                     console.error(cross, file, `\n\t${replaceall('\n', '\n\t', e.toString())}`)
                 }
-                if (passed+failed === files.length) {
+                if (passed+failed+ignored === files.length) {
                     console.log('\n')
                     console.log('  ', check, passed, 'valid files')
                     console.log('  ', cross, failed, 'invalid files')
@@ -36,6 +37,8 @@ readdir(folder, (err, files) => {
                     process.exit(failed)
                 }
             })
+        } else {
+            ignored++
         }
     })
 })
