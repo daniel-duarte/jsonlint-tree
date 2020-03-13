@@ -10,6 +10,7 @@ const check = String.fromCharCode(0x2713).green
 const cross = String.fromCharCode(0x2717).red
 
 var folder = argv._[0].startsWith('/') ? argv._[0] : `${process.cwd()}/${argv._[0]}`
+var hidePassed = argv['hide-passed'] === true;
 
 var passed = 0
 var failed = 0
@@ -22,7 +23,7 @@ readdir(folder, (err, files) => {
                 if (err) throw err
                 try {
                     jsonlint.parse(data)
-                    console.log(check, file)
+                    if (!hidePassed) { console.log(check, file); }
                     passed++
                 }
                 catch (e) {
